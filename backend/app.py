@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS  # Importar o CORS
+from flask_cors import CORS
 import os
 from dotenv import load_dotenv
 import google.generativeai as genai
@@ -20,8 +20,11 @@ CORS(app)
 
 @app.route('/question', methods=['POST'])
 def question():
-    question = request.json.get('question')
-    if not question:
+    """
+        Endpoint para receber perguntas e retornar respostas do modelo Gemini.
+    """
+    user_question = request.json.get('question')
+    if not user_question:
         return jsonify({'erro': 'Pergunta não fornecida'}), 400
 
     try:
@@ -36,7 +39,7 @@ def question():
             - Se a pergunta envolver opinião pessoal, política ou temas polêmicos, responda com caridade e base no ensino da Igreja, deixando claro quando a resposta pertence ao campo da doutrina ou da prudência pastoral.
             Se você não souber a resposta com segurança, diga com humildade que não tem certeza e convide o usuário a buscar orientação de um sacerdote ou catequista.
 
-            Pergunta: {question}
+            Pergunta: {user_question}
         """
         answer = modelo.generate_content(prompt)
         return jsonify({'answer': answer.text.strip()})
@@ -45,4 +48,4 @@ def question():
         return jsonify({'erro': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=8080, debug=True)
