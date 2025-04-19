@@ -3,6 +3,8 @@ from flask_cors import CORS
 import os
 from dotenv import load_dotenv
 import google.generativeai as genai
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 # Carregar variáveis do .env
 load_dotenv()
@@ -16,7 +18,13 @@ modelo = genai.GenerativeModel("gemini-2.0-flash")
 app = Flask(__name__)
 
 # Configurar o CORS para múltiplas origens
-CORS(app, resources={r'/*': {'origins': ['https://o-catequista.vercel.app', 'https://ocatequista.onrender.com']}})
+CORS(app, resources={r'/*': {'origins': ['https://ocatequista.vercel.app', 'https://ocatequista.onrender.com', 'http://localhost:*']}})
+
+limiter = Limiter(get_remote_address, app=app, default_limits=["5 per minute"])
+
+@app.errorhandler(429)
+def ratelimit_error(e):
+    return jsonify({'answer': 'Muitas requisições. Tente novamente mais tarde.'}), 429
 
 @app.route('/question', methods=['POST'])
 def question():
@@ -26,6 +34,9 @@ def question():
     user_question = request.json.get('question')
     if not user_question:
         return jsonify({'erro': 'Pergunta não fornecida'}), 400
+
+    if len(user_question) > 500:
+        return jsonify({'erro': 'Pergunta muito longa'}), 400
 
     try:
         prompt = f"""
@@ -48,4 +59,4 @@ def question():
         return jsonify({'erro': str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080, debug=True)
+    app.run(host='0.0.0.0', port=8080, debug=False)
