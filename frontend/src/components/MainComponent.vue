@@ -17,7 +17,7 @@
       <button :disabled="loading" @click="sendQuestion">
         <span v-if="!loading">Perguntar</span>
         <div v-else class="book-flip-loader">
-          <div class="page"></div>
+          <div class="page first"></div>
           <div class="page"></div>
           <div class="page"></div>
         </div>
@@ -40,11 +40,12 @@ import axios from 'axios'
 import { marked } from 'marked'
 
 export default {
+  name: 'MainComponent',
   data() {
     return {
       question: '',
       animatedAnswer: '',
-      loading: false,
+      loading: true,
       title: '',
     }
   },
@@ -226,6 +227,9 @@ button {
   transform-origin: left center;
   animation: flipPage 1.2s infinite;
   border-radius: 2px;
+}
+.first {
+  background: #fcd34d;
 }
 
 .page:nth-child(2) {
