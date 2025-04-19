@@ -45,7 +45,7 @@ export default {
     return {
       question: '',
       animatedAnswer: '',
-      loading: true,
+      loading: false,
       title: '',
     }
   },
