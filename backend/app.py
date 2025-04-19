@@ -16,7 +16,7 @@ modelo = genai.GenerativeModel("gemini-2.0-flash")
 app = Flask(__name__)
 
 # Configurar o CORS
-CORS(app)
+CORS(app, resources={r'/*': {'origins': 'https://o-catequista.vercel.app/'}})
 
 @app.route('/question', methods=['POST'])
 def question():
