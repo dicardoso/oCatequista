@@ -13,9 +13,10 @@
         type="text"
         placeholder="Ex: O que é o purgatório?"
         @keyup.enter="sendQuestion"
+        :disabled="loading || animating"
       />
-      <button :disabled="loading" @click="sendQuestion">
-        <span v-if="!loading">Perguntar</span>
+      <button :disabled="loading || animating" @click="sendQuestion">
+        <span v-if="!loading && !animating">Perguntar</span>
         <div v-else class="book-flip-loader">
           <div class="page first"></div>
           <div class="page"></div>
@@ -46,6 +47,7 @@ export default {
       question: '',
       animatedAnswer: '',
       loading: false,
+      animating: false,
       title: '',
     }
   },
@@ -55,6 +57,7 @@ export default {
 
       this.loading = true
       this.animatedAnswer = ''
+      this.animating = true
 
       try {
         const { data } = await axios.post(
@@ -67,6 +70,7 @@ export default {
         this.animarRespostaHTML(respostaHTML)
       } catch (err) {
         this.animatedAnswer = '<p><strong>Erro ao buscar resposta.</strong></p>'
+        this.animating = false
       } finally {
         this.loading = false
       }
@@ -86,7 +90,9 @@ export default {
         if (i < html.length) {
           this.animatedAnswer += html.charAt(i)
           i++
-          setTimeout(escrever, 3) // você pode ajustar a velocidade aqui
+          setTimeout(escrever, 3)
+        } else {
+          this.animating = false
         }
       }
 
@@ -161,6 +167,11 @@ button {
   border-radius: 12px;
   font-weight: bold;
   cursor: pointer;
+}
+
+button:disabled {
+  background: #ccc;
+  cursor: not-allowed;
 }
 
 .answer {
