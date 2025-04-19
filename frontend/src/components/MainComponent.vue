@@ -1,38 +1,44 @@
 <template>
-  <div class="app">
-    <header class="header">
-      <div class="icon">
-        <img src="../assets/icon.png" width="50" srcset="">
-      </div>
-      <h1>O Catequista</h1>
-    </header>
-
-    <div class="input-box">
-      <input
-        v-model="question"
-        type="text"
-        placeholder="Ex: O que é o purgatório?"
-        @keyup.enter="sendQuestion"
-        :disabled="loading || animating"
-      />
-      <button :disabled="loading || animating" @click="sendQuestion">
-        <span v-if="!loading && !animating">Perguntar</span>
-        <div v-else class="book-flip-loader">
-          <div class="page first"></div>
-          <div class="page"></div>
-          <div class="page"></div>
+  <div>
+    <div class="app">
+      
+      <header class="header">
+        <div class="icon">
+          <img src="../assets/icon.png" width="50" srcset="">
         </div>
-      </button>
+        <h1>O Catequista</h1>
+      </header>
+
+      <div class="input-box">
+        <input
+          v-model="question"
+          type="text"
+          placeholder="Ex: O que é o purgatório?"
+          @keyup.enter="sendQuestion"
+          :disabled="loading || animating"
+        />
+        <button :disabled="loading || animating" @click="sendQuestion">
+          <span v-if="!loading && !animating">Perguntar</span>
+          <div v-else class="book-flip-loader">
+            <div class="page first"></div>
+            <div class="page"></div>
+            <div class="page"></div>
+          </div>
+        </button>
 
 
-    </div>
-
-    <transition name="fade">
-      <div v-if="animatedAnswer" class="answer">
-        <h2>{{ title }}</h2>
-        <div v-html="animatedAnswer"></div>
       </div>
-    </transition>
+
+      <transition name="fade">
+        <div v-if="animatedAnswer" class="answer">
+          <h2>{{ title }}</h2>
+          <div v-html="animatedAnswer"></div>
+        </div>
+      </transition>
+    </div>
+    <a href="https://livepix.gg/dicardoso" target="_blank" class="support-button">
+      Apoiar
+    </a>
   </div>
 </template>
 
@@ -265,5 +271,86 @@ button:disabled {
   }
 }
 
+/* Responsividade */
+@media (max-width: 768px) {
+  .app {
+    width: 90%;
+    padding: 1rem;
+  }
 
+  .header h1 {
+    font-size: 1.5rem;
+  }
+
+  .input-box {
+    width: 100%;
+  }
+
+  .input-box button {
+    width: 100%;
+  }
+
+  input[type='text'] {
+    font-size: 0.9rem;
+  }
+
+  button {
+    font-size: 0.9rem;
+  }
+
+  .answer {
+    height: auto;
+    max-height: 50vh;
+  }
+  
+  .support-button {
+    font-size: 0.5rem;
+    padding: 0.4rem 0.8rem;
+    top: 3.5rem;
+    right: 0.8rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .header h1 {
+    font-size: 1.2rem;
+  }
+
+  .icon img {
+    width: 40px;
+  }
+
+  input[type='text'] {
+    font-size: 0.8rem;
+    padding: 0.6rem;
+  }
+
+  button {
+    font-size: 0.8rem;
+    padding: 0.6rem;
+  }
+  .support-button {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.6rem;
+    top: 0.6rem;
+    right: 0.6rem;
+  }
+}
+.support-button {
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #fff;
+  text-decoration: none;
+  background: none;
+  border: 1px solid #fff;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.support-button:hover {
+  background-color: #fff;
+  color: #333;
+}
 </style>
